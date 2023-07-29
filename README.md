@@ -3,17 +3,7 @@
 <!-- Introduction -->
 # Hi there! 👋
 
-Welcome to my GitHub profile! I'm [Your Name], a passionate software developer with a strong emphasis on privacy-centric solutions. I'm the creator of **Beaver Notes**, a minimal and privacy-centered note-taking app designed to elevate your productivity and protect your valuable ideas. Let's explore how Beaver Notes is revolutionizing the note-taking experience!
-
-<!-- About Me -->
-## About Me
-
-- 🔭 I’m constantly improving Beaver Notes to make it the go-to note-taking app for privacy-conscious users.
-- 🌱 I love learning new technologies and exploring innovative ways to enhance the user experience.
-- 👯 I’m always open to collaborating with like-minded individuals who share a passion for privacy and productivity.
-- 💬 Ask me anything about Beaver Notes, privacy in software development, or my coding journey.
-- 📫 Reach me at [danielerolli@proton.me](mailto:danielerolli@proton.me).
-- 😄 Pronouns: He / Him / His.
+Welcome to my GitHub profile! I'm Daniele Rolli, a passionate software developer with a strong emphasis on privacy-centric solutions. I'm the creator of **Beaver Notes**, a minimal and privacy-centered note-taking app designed to elevate your productivity and protect your valuable ideas. Let's explore how Beaver Notes is revolutionizing the note-taking experience!
 
 <!-- Beaver Notes Overview -->
 ## Beaver Notes - Elevate Your Note-taking Journey
@@ -31,6 +21,7 @@ Are you tired of cluttered note-taking apps that compromise your privacy? Look n
 ## Take a Look at Beaver Notes
 
 ![Screenshot 1](https://github.com/Daniele-rolli/beaver-website/blob/main/public/resources/systems.jpeg)
+
 <!-- Skills -->
 ## My Skills
 
