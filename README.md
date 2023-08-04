@@ -14,7 +14,6 @@ Are you tired of cluttered note-taking apps that compromise your privacy? Look n
 
 - **Privacy-Centered:** Beaver Notes takes your privacy seriously. Your data is stored locally, and we never compromise your security by storing it on our servers.
 - **Minimal and Intuitive:** Enjoy a clutter-free interface with a focus on simplicity and ease of use. Take notes without distractions.
-- **Cross-Platform:** Whether you're using a Mac, PC, or Linux system, Beaver Notes has got you covered.
 - **Open Source:** Verify the code and contribute to making Beaver Notes even better.
 
 <!-- Screenshots -->
@@ -28,8 +27,6 @@ Are you tired of cluttered note-taking apps that compromise your privacy? Look n
 - **Programming Languages:** JavaScript, HTML, CSS
 - **Frameworks and Libraries:** Vue.js, Electron
 - **Databases:** MongoDB
-- **Other Tools:** Shell in Mac OS and Linux
-- **Problem Solving:** Critical Thinking
 
 <!-- GitHub Stats -->
 ## GitHub Stats
