@@ -1,5 +1,3 @@
-<!-- Your Name's GitHub Profile -->
-
 <!-- Introduction -->
 # Hi there! 👋
 
