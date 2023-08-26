@@ -17,7 +17,7 @@ Are you tired of cluttered note-taking apps that compromise your privacy? Look n
 <!-- Screenshots -->
 ## Take a Look at Beaver Notes
 
-![Screenshot 1](https://github.com/Daniele-rolli/beaver-website/blob/main/public/resources/systems.jpeg)
+![Screenshot 1](https://github.com/Daniele-rolli/beaver-website/blob/main/public/resources/systems.webp)
 
 <!-- Skills -->
 ## My Skills
