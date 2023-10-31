@@ -1,18 +1,26 @@
 <!-- Introduction -->
 # Hi there! 👋
 
-Welcome to my GitHub profile! I'm Daniele Rolli, a passionate software developer with a strong emphasis on privacy-centric solutions. I'm the creator of **Beaver Notes**, a minimal and privacy-centered note-taking app designed to elevate your productivity and protect your valuable ideas. Let's explore how Beaver Notes is revolutionizing the note-taking experience!
+I'm Daniele Rolli, a software developer, privacy advocate, and open-source enthusiast. My biggest project is Beaver Notes, a note-taking app focused on putting YOU in control of what YOU write, without anyone having access to it. Let's take a quick look.
 
 <!-- Beaver Notes Overview -->
 ## Beaver Notes - Elevate Your Note-taking Journey
 
-Are you tired of cluttered note-taking apps that compromise your privacy? Look no further! **Beaver Notes** is here to revolutionize your note-taking experience. Effortlessly capture and organize your thoughts on your Mac, PC, or Linux system, all while enjoying the peace of mind that comes with open-source security. Take charge of your note-taking journey and elevate your productivity to new heights! 🚀
+Tired of cluttered note-taking apps that compromise your privacy? Well, Beaver Notes has got you covered. Effortlessly capture and organize your thoughts on your Mac, PC, or Linux system, all while enjoying the peace of mind that comes with open-source security. Take charge of your note-taking journey and elevate your productivity to new heights! 🚀
 
 ### Key Features
 
-- **Privacy-Centered:** Beaver Notes takes your privacy seriously. Your data is stored locally, and we never compromise your security by storing it on our servers.
-- **Minimal and Intuitive:** Enjoy a clutter-free interface with a focus on simplicity and ease of use. Take notes without distractions.
-- **Open Source:** Verify the code and contribute to making Beaver Notes even better.
+- **Privacy-Focused:** Beaver Notes places a strong emphasis on your privacy. Your data is kept locally, and we never compromise your security by storing it on our servers.
+
+- **Simplicity and Intuitiveness:** Enjoy a clutter-free interface designed for simplicity and ease of use. Take notes without any distractions.
+
+- **Open Source:** Access and contribute to the source code, making Beaver Notes even better.
+
+- **Secure Notes:** Lock your notes for your eyes only.
+
+- **Effortless Markdown:** Easily jot down notes using Markdown syntax.
+
+- **Cross-Platform Sync:** Synchronize your notes across Windows, Mac, and Linux devices.
 
 <!-- Screenshots -->
 ## Take a Look at Beaver Notes
@@ -22,8 +30,8 @@ Are you tired of cluttered note-taking apps that compromise your privacy? Look n
 <!-- Skills -->
 ## My Skills
 
-- **Programming Languages:** JavaScript, HTML, CSS
-- **Frameworks and Libraries:** Vue.js, Electron
+- **Programming Languages:** JavaScript, HTML, CSS, React & Shell script
+- **Frameworks and Libraries:** Vue.js & Electron
 - **Databases:** MongoDB
 
 <!-- GitHub Stats -->
@@ -34,4 +42,4 @@ Are you tired of cluttered note-taking apps that compromise your privacy? Look n
 <!-- Thank You -->
 ## Thank You for Visiting!
 
-Thank you for exploring my GitHub profile and learning about Beaver Notes. I'm excited about building a community of privacy-conscious note-takers who value simplicity and security. If you have any questions, feedback, or ideas, feel free to reach out. Let's create a brighter, more private note-taking future together! ✨
+Thank you for taking the time to explore my GitHub profile and learn about Beaver Notes. I'd appreciate it if you checked out Beaver Notes and joined the community. Have a great day, and if you have any questions, feedback, or ideas, feel free to reach out. Let's work together to create a brighter, more private note-taking future!
