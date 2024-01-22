@@ -37,7 +37,7 @@ Tired of cluttered note-taking apps that compromise your privacy? Well, Beaver N
 <!-- GitHub Stats -->
 ## GitHub Stats
 
-![Your GitHub Stats](https://github-readme-stats.vercel.app/api?username=Daniele-rolli&show_icons=true&hide=prs,issues&count_private=true&theme=react&hide_border=true&bg_color=fff&title_color=fbbf24&icon_color=fbbf24&text_color=fbbf24)
+[![Contribution Stats](https://github-contribution-stats.vercel.app/api/?username=Daniele-rolli)](https://github.com/LordDashMe/github-contribution-stats/)
 
 <!-- Thank You -->
 ## Thank You for Visiting!
