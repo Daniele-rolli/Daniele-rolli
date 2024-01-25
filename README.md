@@ -3,7 +3,7 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=daniele-rolli&label=Profile%20views&color=0e75b6&style=flat" alt="daniele-rolli" /> </p>
 
-<p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=daniele-rolli&show_icons=true&locale=en" alt="daniele-rolli" /></p>
+![Daniele's GitHub stats](https://github-readme-stats.vercel.app/api?username=daniele-rolli&show_icons=true)
 
 ![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=daniele-rolli&layout=compact)
 
