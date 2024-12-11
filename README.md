@@ -1,7 +1,7 @@
 <h1 align="center">Hi 👋, I'm Daniele</h1>
 <h3 align="center">A passionate developer from Italy</h3>
 
-<div align="center"><a href="https://git.io/streak-stats"><img src="https://streak-stats.demolab.com?user=Daniele-rolli&hide_border=true&date_format=n%2Fj%5B%2FY%5D" alt="GitHub Streak" /></a></div>
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=Daniele-rolli\&rank_icon=github)](https://github.com/anuraghazra/github-readme-stats)
 
 - 🔭 I’m currently working on [Beaver Notes](https://github.com/Daniele-rolli/Beaver-Notes)
 
