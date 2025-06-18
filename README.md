@@ -1,26 +1,39 @@
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/e0c8d47e-8180-47ec-a37f-3a160510db17" width="100" alt="Centered Image" />
+</p>
+
 <h1 align="center">Hi 👋, I'm Daniele</h1>
 <h3 align="center">A passionate developer from Italy</h3>
 
-[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=Daniele-rolli\&rank_icon=github)](https://github.com/anuraghazra/github-readme-stats)
-
-- 🔭 I’m currently working on [Beaver Notes](https://github.com/Daniele-rolli/Beaver-Notes)
-
-- 🛠️ Another project of mine is [Beaver Pocket](https://github.com/Daniele-rolli/Beaver-notes-pocket)
-
-- 👯 You're welcome to join me and work on **Beaver Notes & Beaver Pocket**
-
-- ⚡ Fun fact: While MacOS is my go-to operating system, I also enjoy using Pop!_OS and Fedora!
-
-- 🌱 I’m currently learning **react, typescript and ionic**
-
-- 📫 How to reach me **danielerolli@proton.me**
-
+<table align="center">
+  <tr>
+    <th style="padding-right: 40px; text-align: center;">GitHub Stats</th>
+    <th style="text-align: center;">About Me</th>
+  </tr>
+  <tr>
+    <td style="padding-left: 20px; vertical-align: top;">
+      <ul>
+        <li>🔭 I’m currently working on <a href="https://github.com/Daniele-rolli/Beaver-Notes">Beaver Notes</a></li>
+        <li>🛠️ Another project of mine is <a href="https://github.com/Daniele-rolli/Beaver-notes-pocket">Beaver Pocket</a></li>
+        <li>💻 You're welcome to join me and work on <strong>Beaver Notes & Beaver Pocket</strong></li>
+        <li>👀 Fun fact: I'm chronically on bluesky posting about tech and what not 🦋</li>
+        <li>🌱 I’m currently learning <strong>react, typescript and ionic</strong></li>
+        <li>📫 How to reach me <strong>danielerolli@proton.me</strong></li>
+      </ul>
+    </td>
+    <td>
+      <a href="https://github.com/anuraghazra/github-readme-stats">
+        <img src="https://github-readme-stats.vercel.app/api?username=Daniele-rolli&rank_icon=github&hide_border=true&bg_color=00000000" alt="Anurag's GitHub stats" />
+      </a>
+    </td>
+  </tr>
+</table>
 
 <h3 align="center">Languages and Tools:</h3>
 
 [![My Skills](https://skillicons.dev/icons?i=js,html,css,androidstudio,appwrite,apple,bash,cmake,codepen,dart,debian,docker,electron,figma,git,github,heroku,js,linux,mongodb,netlify,nextjs,nodejs,ps,pinia,postman,powershell,py,raspberrypi,react,ruby,svelte,swift,tailwindcss,ubuntu,vercel,vite,vue,yarn)](https://skillicons.dev)
 
-<h2 align="center">Support</h2>
+<h3 align="center">Support</h3>
 <div align="center">
     <p>
         <a href="https://www.buymeacoffee.com/beavernotes">
