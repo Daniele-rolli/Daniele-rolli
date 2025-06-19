@@ -1,7 +1,9 @@
 name: Blog post workflow
+
 on:
   schedule:
-    - cron: "0 15 * * *"
+    - cron: "0 15 * * *" # Runs every day at 15:00 UTC
+  workflow_dispatch: # Allows manual trigger via GitHub UI
 
 jobs:
   pull_blog_rss:
@@ -9,17 +11,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Get RSS Feed
         uses: kohrongying/readme-the-rss@master
         with:
           feed_url: https://blog.beavernotes.com/feed.xml
           count: 3
+
       - name: Commit file changes
         run: |
-          git config --global user.name "${{ secrets.MY_USERNAME }}"
-          git config --global user.email "${{ secrets.MY_EMAIL }}"
+          git config --global user.name "Daniele Rolli"
+          git config --global user.email "danielerolli@proton.me"
           git add .
           git diff --quiet --cached || git commit -m "Update README"
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
