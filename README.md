@@ -7,8 +7,8 @@
 
 <table align="center">
   <tr>
-    <th style="padding-right: 40px; text-align: center;">GitHub Stats</th>
     <th style="text-align: center;">About Me</th>
+    <th style="padding-right: 40px; text-align: center;">GitHub Stats</th>
   </tr>
   <tr>
     <td style="padding-left: 20px; vertical-align: top;">
