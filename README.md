@@ -48,5 +48,8 @@
 <h3 align="center">Check out Beaver's Blog</h3>
 <div align="center">
   <!-- BLOGPOSTS:START -->
-  <!-- BLOGPOSTS:END -->
+- [Spring Forward](https://blog.beavernotes.com/2025/03/05/Spring-Forward.html)
+- [The final puzzle piece](https://blog.beavernotes.com/2025/02/15/The-final-puzzle-piece.html)
+- [New Year = New Blog!](https://blog.beavernotes.com/2025/01/09/New-Year-=-New-Blog.html)
+<!-- BLOGPOSTS:END -->
 </div>
