@@ -44,3 +44,9 @@
         </a>
     </p>
 </div>
+
+<h3 align="center">Check out Beaver's Blog</h3>
+<div align="center">
+  <!-- BLOGPOSTS:START -->
+  <!-- BLOGPOSTS:END -->
+</div>
