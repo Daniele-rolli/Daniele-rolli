@@ -48,7 +48,7 @@
 <h3 align="center">Check out Beaver's Blog:</h3>
 
 <!-- BLOGPOSTS:START -->
+- [Inside the Beaver Lab](https://blog.beavernotes.com/2025/07/06/Inside-the-Beaver-Lab.html)
 - [Spring Forward](https://blog.beavernotes.com/2025/03/05/Spring-Forward.html)
 - [The final puzzle piece](https://blog.beavernotes.com/2025/02/15/The-final-puzzle-piece.html)
-- [New Year = New Blog!](https://blog.beavernotes.com/2025/01/09/New-Year-=-New-Blog.html)
 <!-- BLOGPOSTS:END -->
