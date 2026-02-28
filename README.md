@@ -1,6 +1,6 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./src/assets/images/tools-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset="./src/assets/images/tools-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="./static/assets/images/tools-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="./static/assets/images/tools-light.png">
   <img alt="Fallback image description" src="default-image.png">
 </picture>
 
