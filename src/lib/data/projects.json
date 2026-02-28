@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Beaver Notes",
+    "description": "The notes app that respects your privacy. Local-first. Open-source. No tracking.",
+    "image": "./src/assets/images/projects/beaver.png",
+    "url": "https://github.com/Beaver-Notes/Beaver-Notes",
+    "source": "github.com"
+  },
+  {
+    "name": "Capacitor Spotsearch",
+    "description": "Capacitor plugin to interact with Spotlight Search on iOS.",
+    "image": "./src/assets/images/projects/spotsearch.png",
+    "url": "",
+    "source": ""
+  },
+  {
+    "name": "Capacitor Scoped Storage",
+    "description": "A capacitor plugin to access Scoped Storage on Android & iOS",
+    "image": "./src/assets/images/projects/scopedstorage.png",
+    "url": "",
+    "source": ""
+  },
+  {
+    "name": "Orbit",
+    "description": "A private health companion for Colmi smart rings.",
+    "image": "./src/assets/images/projects/orbit.png",
+    "url": "",
+    "source": ""
+  }
+]

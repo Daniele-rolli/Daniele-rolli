@@ -1,37 +1,21 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/e0c8d47e-8180-47ec-a37f-3a160510db17" width="100" alt="Centered Image" />
-</p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./src/assets/images/tools-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="./src/assets/images/tools-light.png">
+  <img alt="Fallback image description" src="default-image.png">
+</picture>
 
-<h1 align="center">Hi 👋, I'm Daniele</h1>
-<h3 align="center">A passionate developer from Italy</h3>
+<h1 align="center">Hi <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px" />, I'm Daniele</h1>
 
-<table align="center">
-  <tr>
-    <th style="text-align: center;">About Me</th>
-    <th style="padding-right: 40px; text-align: center;">GitHub Stats</th>
-  </tr>
-  <tr>
-    <td style="padding-left: 20px; vertical-align: top;">
-      <ul>
-        <li>🔭 I’m currently working on <a href="https://github.com/Daniele-rolli/Beaver-Notes">Beaver Notes</a></li>
-        <li>🛠️ Another project of mine is <a href="https://github.com/Daniele-rolli/Beaver-notes-pocket">Beaver Pocket</a></li>
-        <li>💻 You're welcome to join me and work on <strong>Beaver Notes & Beaver Pocket</strong></li>
-        <li>👀 Fun fact: I'm chronically on bluesky posting about tech and what not 🦋</li>
-        <li>🌱 I’m currently learning <strong>react, typescript and ionic</strong></li>
-        <li>📫 How to reach me <strong>danielerolli@proton.me</strong></li>
-      </ul>
-    </td>
-    <td>
-      <a href="https://github.com/anuraghazra/github-readme-stats">
-        <img src="https://github-readme-stats.vercel.app/api?username=Daniele-rolli&rank_icon=github&hide_border=true&bg_color=00000000" alt="Anurag's GitHub stats" />
-      </a>
-    </td>
-  </tr>
-</table>
+I make computers go beep boop, and I also code, design, debug, celebrate, and rewrite code countless times! I love building tools and apps that I can share with the community. I'm always involved in many projects. Feel free to checkout my portfolio @ danielerolli.com
+
+<div align="center"> 
+<img src="https://streak-stats.demolab.com?user=Daniele-Rolli&theme=default&hide_border=true" alt="Daniele-Rolli's GitHub Stats" />
+
+</div>
 
 <h3 align="center">Languages and Tools:</h3>
 
-[![My Skills](https://skillicons.dev/icons?i=js,html,css,androidstudio,appwrite,apple,bash,cmake,codepen,dart,debian,docker,electron,figma,git,github,heroku,js,linux,mongodb,netlify,nextjs,nodejs,ps,pinia,postman,powershell,py,raspberrypi,react,ruby,svelte,swift,tailwindcss,ubuntu,vercel,vite,vue,yarn)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=js,ts,vue,react,svelte,swift,appwrite,docker,figma,apple,linux,windows)](https://skillicons.dev)
 
 <h3 align="center">Support</h3>
 <div align="center">
@@ -44,11 +28,3 @@
         </a>
     </p>
 </div>
-
-<h3 align="center">Check out Beaver's Blog:</h3>
-
-<!-- BLOGPOSTS:START -->
-- [A small step for a Beaver...](https://blog.beavernotes.com/2025/09/03/A-small-step-for-a-beaver.html)
-- [Inside the Beaver Lab](https://blog.beavernotes.com/2025/07/06/Inside-the-Beaver-Lab.html)
-- [Spring Forward](https://blog.beavernotes.com/2025/03/05/Spring-Forward.html)
-<!-- BLOGPOSTS:END -->

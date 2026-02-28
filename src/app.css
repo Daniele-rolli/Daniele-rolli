@@ -1,0 +1,52 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@import "./assets/font/font.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.border {
+  @apply border-neutral-200 dark:border-neutral-700;
+}
+
+:root {
+  @apply bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white;
+  background-image: url("/images/noise.png");
+  background-size: 200px 200px;
+  background-position: 0 0;
+}
+
+@theme {
+  --color-primary: oklch(82.8% 0.189 84.429);
+}
+
+::-moz-selection {
+  /* Code for Firefox */
+  background: oklch(82.8% 0.189 84.429 / 0.5);
+}
+
+::selection {
+  background: oklch(82.8% 0.189 84.429 / 0.5);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Geist Pixel Circle", monospace;
+  }
+
+  body {
+    font-family: "Manrope", "sans-serif";
+  }
+}
+
+.nav-link {
+  @apply relative rounded-full px-4 py-2 text-sm font-medium transition;
+}
+
+.nav-link.active {
+  @apply bg-neutral-900 text-white dark:bg-white dark:text-neutral-900;
+}

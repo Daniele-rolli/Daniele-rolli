@@ -1,0 +1,124 @@
+<script lang="ts">
+  import { onMount } from "svelte";
+  import * as d3 from "d3";
+  import worldData from "../../lib/world.json";
+
+  let mapContainer: HTMLDivElement;
+
+  const visitedCountries = [
+    "France",
+    "Italy",
+    "Germany",
+    "Spain",
+    "USA",
+    "Switzerland",
+  ];
+
+  onMount(() => {
+    if (!mapContainer) return;
+
+    const width = mapContainer.clientWidth;
+    const height = 500;
+    const autoRotateSensitivity = 75;
+
+    const projection = d3
+      .geoOrthographic()
+      .scale(250)
+      .center([0, 0])
+      .rotate([0, -30])
+      .translate([width / 2, height / 2]);
+
+    const pathGenerator = d3.geoPath().projection(projection);
+    const initialScale = projection.scale();
+
+    const svg = d3
+      .select(mapContainer)
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .style("cursor", "grab");
+
+    // Globe background
+    svg
+      .append("circle")
+      .attr("fill", "#EEE")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 0.2)
+      .attr("cx", width / 2)
+      .attr("cy", height / 2)
+      .attr("r", initialScale);
+
+    const map = svg.append("g");
+
+    const countries = map
+      .append("g")
+      .attr("class", "countries")
+      .selectAll("path")
+      .data(worldData.features)
+      .enter()
+      .append("path")
+      .attr("d", (d: any) => pathGenerator(d))
+      .attr("fill", (d: any) =>
+        visitedCountries.includes(d.properties.name) ? "#2e8b57" : "white",
+      )
+      .style("stroke", "black")
+      .style("stroke-width", 0.3)
+      .style("opacity", 0.9);
+
+    countries
+      .on("mouseover", function (event: MouseEvent, d: any) {
+        d3.select(this as SVGPathElement).attr("fill", "#E63946");
+      })
+      .on("mouseout", function (event: MouseEvent, d: any) {
+        d3.select(this as SVGPathElement).attr(
+          "fill",
+          visitedCountries.includes(d.properties.name) ? "#E63946" : "white",
+        );
+      })
+      .on("click", function (event: MouseEvent, d: any) {
+        console.log("Clicked:", d.properties.name);
+      });
+
+    // Drag to rotate
+    let isDragging = false;
+
+    const drag = d3
+      .drag<SVGSVGElement, unknown>()
+      .on("start", () => {
+        isDragging = true;
+        svg.style("cursor", "grabbing");
+      })
+      .on("drag", (event) => {
+        const rotate = projection.rotate();
+        const dragSensitivity = 0.5;
+
+        projection.rotate([
+          rotate[0] + event.dx * dragSensitivity,
+          rotate[1] - event.dy * dragSensitivity,
+        ]);
+
+        svg.selectAll("path").attr("d", (d: any) => pathGenerator(d));
+      })
+      .on("end", () => {
+        isDragging = false;
+        svg.style("cursor", "grab");
+      });
+
+    svg.call(drag as any);
+
+    // Auto rotation (pauses during drag)
+    d3.timer(() => {
+      if (isDragging) return;
+
+      const rotate = projection.rotate();
+      const k = autoRotateSensitivity / projection.scale();
+
+      projection.rotate([rotate[0] - 1 * k, rotate[1]]);
+      svg.selectAll("path").attr("d", (d: any) => pathGenerator(d));
+    }, 200);
+  });
+</script>
+
+<div class="flex flex-col text-white justify-center items-center w-full h-full">
+  <div class="w-full" bind:this={mapContainer}></div>
+</div>
