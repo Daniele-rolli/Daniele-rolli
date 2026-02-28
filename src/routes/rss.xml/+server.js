@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
 
 export const prerender = true;
@@ -27,7 +27,8 @@ const stripMarkup = (value = "") =>
     .trim();
 
 const buildDescription = (post) => {
-  const candidate = post.description || post.excerpt || stripMarkup(post.content);
+  const candidate =
+    post.description || post.excerpt || stripMarkup(post.content);
   if (!candidate) return FALLBACK_DESCRIPTION;
   if (candidate.length <= MAX_DESCRIPTION_LENGTH) return candidate;
   return `${candidate.slice(0, MAX_DESCRIPTION_LENGTH).trim()}...`;
@@ -74,11 +75,7 @@ export async function GET() {
       <title>${escapeXml(post.title || post.slug)}</title>
       <link>${SITE_URL}/blog/${post.slug}</link>
       <guid>${SITE_URL}/blog/${post.slug}</guid>
-      ${
-        post.date
-          ? `<pubDate>${post.date.toUTCString()}</pubDate>`
-          : ""
-      }
+      ${post.date ? `<pubDate>${post.date.toUTCString()}</pubDate>` : ""}
       <description>${escapeXml(buildDescription(post))}</description>
     </item>
   `,
