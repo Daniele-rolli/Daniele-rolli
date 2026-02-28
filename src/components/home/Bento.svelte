@@ -157,7 +157,7 @@
     >
       <div class="w-16 h-14 relative">
         <img
-          src="src/assets/icons/folder-green.webp"
+          src="/assets/icons/folder-green.webp"
           alt="Projects"
           class="w-full h-full object-contain"
         />
@@ -174,7 +174,7 @@
     >
       <div class="w-16 h-14 relative">
         <img
-          src="src/assets/icons/folder-yellow.webp"
+          src="/assets/icons/folder-yellow.webp"
           alt="About"
           class="w-full h-full object-contain"
         />
@@ -191,7 +191,7 @@
     >
       <div class="w-16 h-14 relative">
         <img
-          src="src/assets/icons/folder-blue.webp"
+          src="/assets/icons/folder-blue.webp"
           alt="Blog"
           class="w-full h-full object-contain"
         />
@@ -212,7 +212,7 @@
     tabindex="0"
   >
     <img
-      src="src/assets/images/roy.jpeg"
+      src="/assets/images/roy.jpeg"
       alt="Roy"
       class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 {royHovered
         ? 'scale-105'
