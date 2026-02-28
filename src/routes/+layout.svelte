@@ -5,9 +5,6 @@
   import "../app.css";
   import Footer from "../components/app/Footer.svelte";
 
-  export const prerender = true;
-  export const trailingSlash = "always";
-
   const SITE_URL = "https://daniele-rolli.com";
   const DEFAULT_TITLE = "Daniele Rolli | Software Developer & OSS Maintainer";
   const DEFAULT_DESCRIPTION =

@@ -20,7 +20,7 @@
               >
                 {#each pages as pageName}
                   <a
-                    href={`/${pageName.toLowerCase()}`}
+                    href={pageName === "Home" ? "/" : `/${pageName.toLowerCase()}`}
                     class="transition-colors hover:text-primary"
                   >
                     {pageName}
