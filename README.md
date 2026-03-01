@@ -6,7 +6,7 @@
 
 <h1 align="center">Hi <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="30px" />, I'm Daniele</h1>
 
-I make computers go beep boop, and I also code, design, debug, celebrate, and rewrite code countless times! I love building tools and apps that I can share with the community. I'm always involved in many projects. Feel free to checkout my portfolio @ danielerolli.com
+I make computers go beep boop, and I also code, design, debug, celebrate, and rewrite code countless times! I love building tools and apps that I can share with the community. I'm always involved in many projects. Feel free to checkout my portfolio @ [daniele-rolli.com](https://daniele-rolli.com)
 
 <div align="center"> 
 <img src="https://streak-stats.demolab.com?user=Daniele-Rolli&theme=default&hide_border=true" alt="Daniele-Rolli's GitHub Stats" />
