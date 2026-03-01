@@ -16,6 +16,7 @@
     "Spain",
     "USA",
     "Switzerland",
+    "Egypt",
   ];
 
   function getDimensions() {
