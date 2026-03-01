@@ -3,7 +3,11 @@
   import * as d3 from "d3";
   import worldData from "../../lib/world.json";
 
+  export let mode: "card" | "dialog" = "card";
+
   let mapContainer: HTMLDivElement;
+  let rotationTimer: d3.Timer | null = null;
+  let resizeObserver: ResizeObserver | null = null;
 
   const visitedCountries = [
     "France",
@@ -14,22 +18,45 @@
     "Switzerland",
   ];
 
-  onMount(() => {
-    if (!mapContainer) return;
+  function getDimensions() {
+    if (!mapContainer) return null;
 
     const width = mapContainer.clientWidth;
-    const height = 500;
+    if (!width) return null;
+
+    if (mode === "dialog") {
+      const isMobile = window.matchMedia("(max-width: 640px)").matches;
+      const minHeight = isMobile ? 240 : 320;
+      const maxHeight = isMobile ? 360 : 520;
+      const height = Math.max(minHeight, Math.min(maxHeight, width * 0.68));
+
+      return { width, height };
+    }
+
+    return { width, height: 220 };
+  }
+
+  function renderGlobe() {
+    if (!mapContainer) return;
+
+    const dimensions = getDimensions();
+    if (!dimensions) return;
+
+    const { width, height } = dimensions;
     const autoRotateSensitivity = 75;
+    const sphereRadius = Math.min(width, height) * (mode === "dialog" ? 0.45 : 0.5);
+
+    rotationTimer?.stop();
+    d3.select(mapContainer).selectAll("*").remove();
 
     const projection = d3
       .geoOrthographic()
-      .scale(250)
+      .scale(sphereRadius)
       .center([0, 0])
       .rotate([0, -30])
       .translate([width / 2, height / 2]);
 
     const pathGenerator = d3.geoPath().projection(projection);
-    const initialScale = projection.scale();
 
     const svg = d3
       .select(mapContainer)
@@ -46,7 +73,7 @@
       .attr("stroke-width", 0.2)
       .attr("cx", width / 2)
       .attr("cy", height / 2)
-      .attr("r", initialScale);
+      .attr("r", sphereRadius);
 
     const map = svg.append("g");
 
@@ -72,7 +99,7 @@
       .on("mouseout", function (event: MouseEvent, d: any) {
         d3.select(this as SVGPathElement).attr(
           "fill",
-          visitedCountries.includes(d.properties.name) ? "#E63946" : "white",
+          visitedCountries.includes(d.properties.name) ? "#2e8b57" : "white",
         );
       })
       .on("click", function (event: MouseEvent, d: any) {
@@ -107,7 +134,7 @@
     svg.call(drag as any);
 
     // Auto rotation (pauses during drag)
-    d3.timer(() => {
+    rotationTimer = d3.timer(() => {
       if (isDragging) return;
 
       const rotate = projection.rotate();
@@ -116,6 +143,22 @@
       projection.rotate([rotate[0] - 1 * k, rotate[1]]);
       svg.selectAll("path").attr("d", (d: any) => pathGenerator(d));
     }, 200);
+  }
+
+  onMount(() => {
+    if (!mapContainer) return;
+
+    renderGlobe();
+
+    resizeObserver = new ResizeObserver(() => {
+      renderGlobe();
+    });
+    resizeObserver.observe(mapContainer);
+
+    return () => {
+      resizeObserver?.disconnect();
+      rotationTimer?.stop();
+    };
   });
 </script>
 

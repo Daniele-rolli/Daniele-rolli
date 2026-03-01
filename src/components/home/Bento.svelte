@@ -276,7 +276,7 @@
       >World Visited</span
     >
     <div class="flex flex-1 items-end overflow-hidden">
-      <div class="max-h-full w-full"><World /></div>
+      <div class="max-h-full w-full"><World mode="card" /></div>
     </div>
   </div>
 
@@ -331,7 +331,7 @@
     role="dialog"
   >
     <div
-      class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-[20px] p-8 w-[80%] max-w-[900px] max-h-[90vh] overflow-auto relative"
+      class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-[20px] p-4 sm:p-8 w-[94vw] sm:w-[88vw] max-w-[900px] max-h-[92vh] overflow-hidden relative"
       on:click|stopPropagation
     >
       <button
@@ -339,7 +339,7 @@
         class="absolute top-4 right-4 w-7 h-7 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-500 flex items-center justify-center hover:bg-neutral-200 dark:hover:bg-neutral-700"
         >✕</button
       >
-      {#if modal === "world"}<World />{/if}
+      {#if modal === "world"}<World mode="dialog" />{/if}
     </div>
   </div>
 {/if}
