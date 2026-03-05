@@ -2,15 +2,22 @@ import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { env } from '$env/dynamic/private';
 
+const EDGE_CACHE_SECONDS = 300;
+const EDGE_STALE_SECONDS = 60;
+const EDGE_CACHE_CONTROL = `public, s-maxage=${EDGE_CACHE_SECONDS}, stale-while-revalidate=${EDGE_STALE_SECONDS}`;
+export const prerender = false;
+
 const NOW_PLAYING_BASE_URL =
     env.NOW_PLAYING_URL?.trim() ??
-    env.VITE_NOW_PLAYING_URL?.trim() ??
     'http://localhost:3000';
 
 
 const NOW_PLAYING_AUTH_TOKEN =
-    env.NOW_PLAYING_AUTH_TOKEN?.trim() ??
-    env.VITE_NOW_PLAYING_AUTH_TOKEN?.trim();
+    env.NOW_PLAYING_AUTH_TOKEN?.trim();
+
+type CloudflareCacheStorage = CacheStorage & {
+    default?: Cache;
+};
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -73,8 +80,20 @@ function nowPlayingUrl(base: string): string {
     return new URL('now-playing', normalized).toString();
 }
 
-export const GET: RequestHandler = async () => {
+function edgeCache(): Cache | null {
+    if (typeof caches === 'undefined') return null;
+    return (caches as CloudflareCacheStorage).default ?? null;
+}
+
+export const GET: RequestHandler = async ({ request }) => {
     try {
+        const cache = edgeCache();
+        const cacheKey = new Request(request.url, { method: 'GET' });
+        if (cache) {
+            const cached = await cache.match(cacheKey);
+            if (cached) return cached;
+        }
+
         const headers: HeadersInit = { accept: 'application/json' };
         if (NOW_PLAYING_AUTH_TOKEN) {
             headers.authorization = `Bearer ${NOW_PLAYING_AUTH_TOKEN}`;
@@ -100,13 +119,26 @@ export const GET: RequestHandler = async () => {
             asBoolean(trackObj?.is_playing) ??
             false;
 
-        return json({
+        const response = json({
             nowPlaying: track,
             lastTrack: track,
             isPlaying
+        }, {
+            headers: {
+                'Cache-Control': EDGE_CACHE_CONTROL
+            }
         });
+
+        if (cache) {
+            await cache.put(cacheKey, response.clone());
+        }
+
+        return response;
     } catch (err) {
         console.error('[apple-music]', err);
-        return json({ nowPlaying: null, lastTrack: null, isPlaying: false });
+        return json(
+            { nowPlaying: null, lastTrack: null, isPlaying: false },
+            { headers: { 'Cache-Control': 'no-store' } }
+        );
     }
 };

@@ -9,6 +9,7 @@
     { delay: -0.24, duration: 1.94, min: 0.26, mid: 0.48, mid2: 0.62, peak: 0.82 },
     { delay: -0.72, duration: 1.48, min: 0.34, mid: 0.64, mid2: 0.5, peak: 0.94 },
   ] as const;
+  const INTERNAL_NOW_PLAYING_ENDPOINT = "/api/apple-music/";
 
   interface Track {
     name: string;
@@ -26,7 +27,7 @@
   type UnknownRecord = Record<string, unknown>;
 
   const publicNowPlayingEndpoint = buildNowPlayingUrl(
-    (import.meta.env.PUBLIC_NOW_PLAYING_URL ?? import.meta.env.VITE_NOW_PLAYING_URL ?? "") as string
+    (import.meta.env.PUBLIC_NOW_PLAYING_URL ?? "") as string
   );
 
   let data: AppleMusicData = {
@@ -139,14 +140,9 @@
   }
 
   function getEndpoints(): string[] {
-    const endpoints: string[] = [];
-
-    if (publicNowPlayingEndpoint) endpoints.push(publicNowPlayingEndpoint);
-    if (
-      typeof window !== "undefined" &&
-      (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
-    ) {
-      endpoints.push("/api/apple-music");
+    const endpoints: string[] = [INTERNAL_NOW_PLAYING_ENDPOINT];
+    if (publicNowPlayingEndpoint && publicNowPlayingEndpoint !== INTERNAL_NOW_PLAYING_ENDPOINT) {
+      endpoints.push(publicNowPlayingEndpoint);
     }
 
     return endpoints;
@@ -165,20 +161,9 @@
   }
 
   async function fetchData() {
-    const publicAuthToken = (
-      import.meta.env.PUBLIC_NOW_PLAYING_AUTH_TOKEN ?? import.meta.env.VITE_NOW_PLAYING_AUTH_TOKEN ?? ""
-    )
-      .toString()
-      .trim();
-
     for (const endpoint of getEndpoints()) {
       try {
-        const headers: HeadersInit = { accept: "application/json" };
-        if (endpoint === publicNowPlayingEndpoint && publicAuthToken) {
-          headers.authorization = `Bearer ${publicAuthToken}`;
-        }
-
-        const res = await fetch(endpoint, { headers });
+        const res = await fetch(endpoint, { headers: { accept: "application/json" } });
         if (!res.ok) continue;
 
         const payload = normalizeAppleMusicData(await res.json());
