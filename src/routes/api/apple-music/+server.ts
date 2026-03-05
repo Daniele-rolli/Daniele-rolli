@@ -7,15 +7,6 @@ const EDGE_STALE_SECONDS = 60;
 const EDGE_CACHE_CONTROL = `public, s-maxage=${EDGE_CACHE_SECONDS}, stale-while-revalidate=${EDGE_STALE_SECONDS}`;
 export const prerender = false;
 
-const NOW_PLAYING_BASE_URL =
-    env.NOW_PLAYING_URL?.trim() ??
-    'http://localhost:3000';
-
-console.log('[apple-music] Now Playing URL:', nowPlayingUrl(NOW_PLAYING_BASE_URL));
-
-const NOW_PLAYING_AUTH_TOKEN =
-    env.NOW_PLAYING_AUTH_TOKEN?.trim();
-
 type CloudflareCacheStorage = CacheStorage & {
     default?: Cache;
 };
@@ -91,13 +82,26 @@ function pickDebugHeaders(headers: Headers): Record<string, string> {
     return out;
 }
 
+function pickBinding(bindings: Record<string, unknown>, key: string): string | null {
+    return asNonEmptyString(bindings[key]);
+}
+
 function edgeCache(): Cache | null {
     if (typeof caches === 'undefined') return null;
     return (caches as CloudflareCacheStorage).default ?? null;
 }
 
-export const GET: RequestHandler = async ({ request }) => {
+export const GET: RequestHandler = async ({ request, platform }) => {
     try {
+        const bindings = ((platform?.env ?? {}) as Record<string, unknown>);
+        const nowPlayingBaseUrl =
+            pickBinding(bindings, 'NOW_PLAYING_URL') ??
+            env.NOW_PLAYING_URL?.trim() ??
+            'http://localhost:3000';
+        const nowPlayingAuthToken =
+            pickBinding(bindings, 'NOW_PLAYING_AUTH_TOKEN') ??
+            env.NOW_PLAYING_AUTH_TOKEN?.trim();
+
         const cache = edgeCache();
         const cacheKey = new Request(request.url, { method: 'GET' });
         if (cache) {
@@ -106,11 +110,11 @@ export const GET: RequestHandler = async ({ request }) => {
         }
 
         const headers: HeadersInit = { accept: 'application/json' };
-        if (NOW_PLAYING_AUTH_TOKEN) {
-            headers.authorization = `Bearer ${NOW_PLAYING_AUTH_TOKEN}`;
+        if (nowPlayingAuthToken) {
+            headers.authorization = `Bearer ${nowPlayingAuthToken}`;
         }
 
-        const upstreamUrl = nowPlayingUrl(NOW_PLAYING_BASE_URL);
+        const upstreamUrl = nowPlayingUrl(nowPlayingBaseUrl);
         const res = await globalThis.fetch(upstreamUrl, {
             headers,
             signal: AbortSignal.timeout(5000)
