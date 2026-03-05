@@ -10,6 +10,7 @@
     { delay: -0.72, duration: 1.48, min: 0.34, mid: 0.64, mid2: 0.5, peak: 0.94 },
   ] as const;
   const INTERNAL_NOW_PLAYING_ENDPOINT = "/api/apple-music/";
+  const PLAYING_GRACE_MS = 3 * 60_000;
 
   interface Track {
     name: string;
@@ -42,6 +43,7 @@
   let mediaQuery: MediaQueryList | null = null;
   let isBursting = false;
   let isCoverHovered = false;
+  let lastPlayingAt = 0;
 
   $: track = data.nowPlaying ?? data.lastTrack;
   $: isPlaying = data.isPlaying;
@@ -169,7 +171,18 @@
         const payload = normalizeAppleMusicData(await res.json());
         if (!payload) continue;
 
-        data = payload;
+        const now = Date.now();
+        if (payload.isPlaying) {
+          lastPlayingAt = now;
+        }
+
+        const hasTrack = Boolean(payload.nowPlaying ?? payload.lastTrack);
+        const forcedPlaying = hasTrack && now - lastPlayingAt <= PLAYING_GRACE_MS;
+
+        data = {
+          ...payload,
+          isPlaying: payload.isPlaying || forcedPlaying,
+        };
         return;
       } catch {
         // keep showing stale data
