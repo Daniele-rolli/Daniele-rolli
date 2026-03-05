@@ -9,7 +9,7 @@
     { delay: -0.24, duration: 1.94, min: 0.26, mid: 0.48, mid2: 0.62, peak: 0.82 },
     { delay: -0.72, duration: 1.48, min: 0.34, mid: 0.64, mid2: 0.5, peak: 0.94 },
   ] as const;
-  const INTERNAL_NOW_PLAYING_ENDPOINT = "/api/apple-music/";
+  const INTERNAL_NOW_PLAYING_ENDPOINT = "/api/apple-music";
   const PLAYING_GRACE_MS = 3 * 60_000;
 
   interface Track {
@@ -165,7 +165,10 @@
   async function fetchData() {
     for (const endpoint of getEndpoints()) {
       try {
-        const res = await fetch(endpoint, { headers: { accept: "application/json" } });
+        const res = await fetch(endpoint, {
+          headers: { accept: "application/json" },
+          cache: "no-store",
+        });
         if (!res.ok) continue;
 
         const payload = normalizeAppleMusicData(await res.json());

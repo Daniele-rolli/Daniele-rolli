@@ -5,6 +5,7 @@ import { env } from '$env/dynamic/private';
 const EDGE_CACHE_SECONDS = 300;
 const EDGE_STALE_SECONDS = 60;
 const EDGE_CACHE_CONTROL = `public, s-maxage=${EDGE_CACHE_SECONDS}, stale-while-revalidate=${EDGE_STALE_SECONDS}`;
+const BROWSER_CACHE_CONTROL = 'no-store';
 export const prerender = false;
 
 type CloudflareCacheStorage = CacheStorage & {
@@ -145,7 +146,9 @@ export const GET: RequestHandler = async ({ request, platform }) => {
             isPlaying
         }, {
             headers: {
-                'Cache-Control': EDGE_CACHE_CONTROL
+                'Cache-Control': BROWSER_CACHE_CONTROL,
+                'CDN-Cache-Control': EDGE_CACHE_CONTROL,
+                'Cloudflare-CDN-Cache-Control': EDGE_CACHE_CONTROL
             }
         });
 
