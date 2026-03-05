@@ -11,6 +11,7 @@ const NOW_PLAYING_BASE_URL =
     env.NOW_PLAYING_URL?.trim() ??
     'http://localhost:3000';
 
+console.log('[apple-music] Now Playing URL:', nowPlayingUrl(NOW_PLAYING_BASE_URL));
 
 const NOW_PLAYING_AUTH_TOKEN =
     env.NOW_PLAYING_AUTH_TOKEN?.trim();
@@ -80,6 +81,16 @@ function nowPlayingUrl(base: string): string {
     return new URL('now-playing', normalized).toString();
 }
 
+function pickDebugHeaders(headers: Headers): Record<string, string> {
+    const keys = ['server', 'cf-ray', 'cf-cache-status', 'www-authenticate', 'x-served-by', 'content-type'];
+    const out: Record<string, string> = {};
+    for (const key of keys) {
+        const value = headers.get(key);
+        if (value) out[key] = value;
+    }
+    return out;
+}
+
 function edgeCache(): Cache | null {
     if (typeof caches === 'undefined') return null;
     return (caches as CloudflareCacheStorage).default ?? null;
@@ -99,12 +110,23 @@ export const GET: RequestHandler = async ({ request }) => {
             headers.authorization = `Bearer ${NOW_PLAYING_AUTH_TOKEN}`;
         }
 
-        const res = await globalThis.fetch(nowPlayingUrl(NOW_PLAYING_BASE_URL), {
+        const upstreamUrl = nowPlayingUrl(NOW_PLAYING_BASE_URL);
+        const res = await globalThis.fetch(upstreamUrl, {
             headers,
             signal: AbortSignal.timeout(5000)
         });
 
-        if (!res.ok) throw new Error(`Upstream ${res.status}`);
+        if (!res.ok) {
+            const body = await res.text();
+            console.error('[apple-music] upstream-non-200', {
+                status: res.status,
+                statusText: res.statusText,
+                url: upstreamUrl,
+                headers: pickDebugHeaders(res.headers),
+                bodyPreview: body.slice(0, 500)
+            });
+            throw new Error(`Upstream ${res.status}`);
+        }
 
         const data = await res.json();
         const payload = asRecord(data) ?? {};
