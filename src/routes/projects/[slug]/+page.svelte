@@ -8,7 +8,10 @@
 {#if data}
   <main class="max-w-4xl mx-auto p-6">
     <!-- Top bar -->
-    <div class="flex justify-between items-end mb-4 gap-6">
+    <div
+      class="page-enter-item flex justify-between items-end mb-4 gap-6"
+      style="--enter-index: 0"
+    >
       <h1 class="text-7xl leading-tight break-words min-w-0">
         {data.metadata.title}
       </h1>
@@ -43,19 +46,25 @@
       <img
         src={data.metadata.banner}
         alt="{data.metadata.title} banner"
-        class="rounded-xl mb-6 w-full"
+        class="page-enter-item rounded-xl mb-6 w-full"
+        style="--enter-index: 1"
       />
     {/if}
 
     {#if data.metadata.stack}
-      <Stack stack={data.metadata.stack} />
+      <div class="page-enter-item" style="--enter-index: 2">
+        <Stack stack={data.metadata.stack} />
+      </div>
     {/if}
 
     <!-- Content -->
-    <div class="prose dark:prose-invert max-w-none">
+    <div
+      class="page-enter-item prose dark:prose-invert max-w-none"
+      style="--enter-index: 3"
+    >
       {@html marked(data.content)}
     </div>
   </main>
 {:else}
-  <p>Article not found.</p>
+  <p class="page-enter-item" style="--enter-index: 0">Article not found.</p>
 {/if}

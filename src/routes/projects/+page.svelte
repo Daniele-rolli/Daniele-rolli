@@ -7,7 +7,7 @@
     <div class="mx-auto w-full max-w-7xl lg:px-8">
       <div class="relative px-4 sm:px-8 lg:px-12">
         <div class="mx-auto max-w-2xl lg:max-w-5xl">
-          <header class="max-w-2xl">
+          <header class="max-w-2xl page-enter-item" style="--enter-index: 0">
             <h1
               class="text-4xl font-thin text-neutral-800 sm:text-5xl dark:text-neutral-100"
             >
@@ -24,10 +24,11 @@
           <div
             class="mt-16 sm:mt-20 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {#each projects as project}
+            {#each projects as project, index}
               <a
                 href={`/projects/${project.name.toLowerCase().replace(/\s+/g, "-")}`}
-                class="group flex items-center gap-4 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-sm dark:shadow-none transition-all duration-200 hover:scale-[1.02] hover:border-neutral-300 dark:hover:border-neutral-700"
+                class="page-enter-item group flex items-center gap-4 p-3 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow-sm dark:shadow-none transition-all duration-200 hover:scale-[1.02] hover:border-neutral-300 dark:hover:border-neutral-700"
+                style={`--enter-index: ${index + 1}`}
               >
                 <div class="shrink-0">
                   <img

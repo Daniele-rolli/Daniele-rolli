@@ -12,7 +12,7 @@
   <div class="my-20 mx-auto w-full max-w-7xl lg:px-8">
     <div class="relative px-4 sm:px-8 lg:px-12">
       <div class="mx-auto max-w-2xl lg:max-w-5xl">
-        <div class="mb-8 flex justify-end">
+        <div class="mb-8 flex justify-end page-enter-item" style="--enter-index: 0">
           <a
             href="/rss.xml"
             class="inline-flex items-center px-4 py-2 text-sm text-neutral-600 transition-colors hover:text-primary dark:border-neutral-700 dark:text-neutral-300"
@@ -21,11 +21,15 @@
           </a>
         </div>
         <div
-          class="md:border-l md:border-neutral-100 md:pl-6 md:dark:border-neutral-700/40"
+          class="page-enter-item md:border-l md:border-neutral-100 md:pl-6 md:dark:border-neutral-700/40"
+          style="--enter-index: 1"
         >
           <div class="flex max-w-3xl flex-col space-y-16">
-            {#each data.posts as post}
-              <article class="md:grid md:grid-cols-4 md:items-baseline">
+            {#each data.posts as post, index}
+              <article
+                class="page-enter-item md:grid md:grid-cols-4 md:items-baseline"
+                style={`--enter-index: ${index + 2}`}
+              >
                 <!-- Main content -->
                 <div
                   class="md:col-span-3 group relative flex flex-col items-start"

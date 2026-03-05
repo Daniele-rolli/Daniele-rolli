@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { fade, scale } from "svelte/transition";
   import World from "./World.svelte";
 
   let now: Date = new Date();
   let interval: ReturnType<typeof setInterval>;
+  let prefersReducedMotion = false;
 
   let modal: string | null = null;
 
@@ -35,6 +37,14 @@
   }
 
   onMount(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncMotionPreference = () => {
+      prefersReducedMotion = mediaQuery.matches;
+    };
+
+    syncMotionPreference();
+    mediaQuery.addEventListener("change", syncMotionPreference);
+
     interval = setInterval(() => {
       now = new Date();
     }, 1000);
@@ -73,7 +83,10 @@
       }
     })();
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      mediaQuery.removeEventListener("change", syncMotionPreference);
+    };
   });
 
   function romeTime(): string {
@@ -111,7 +124,8 @@
   class="grid grid-cols-1 md:grid-cols-4 gap-3.5 py-6 m-4 md:[grid-auto-rows:160px]"
 >
   <div
-    class="col-span-1 md:col-span-2 min-h-[160px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl px-6 flex items-center shadow-sm dark:shadow-none"
+    class="bento-card col-span-1 md:col-span-2 min-h-[160px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl px-6 flex items-center shadow-sm dark:shadow-none"
+    style="--card-index: 0"
   >
     <div class="flex items-center gap-6 w-full">
       <div class="flex flex-col gap-0.5 flex-1">
@@ -149,7 +163,8 @@
   </div>
 
   <div
-    class="flex gap-8 md:gap-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-8 items-center justify-center"
+    class="bento-card flex gap-8 md:gap-4 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-8 items-center justify-center"
+    style="--card-index: 1"
   >
     <a
       href="/projects"
@@ -204,7 +219,8 @@
   </div>
 
   <div
-    class="h-[160px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden relative cursor-pointer transition-all duration-200 hover:scale-[1.015]"
+    class="bento-card h-[160px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden relative cursor-pointer transition-all duration-200 hover:scale-[1.015]"
+    style="--card-index: 2"
     on:click={triggerWave}
     on:mouseenter={() => (royHovered = true)}
     on:mouseleave={() => (royHovered = false)}
@@ -240,7 +256,8 @@
 
   <a
     href={latestPost ? `/blog/${latestPost.slug}` : "/blog"}
-    class="h-[160px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-5 no-underline flex flex-col justify-between group transition-all duration-200 hover:scale-[1.01]"
+    class="bento-card h-[160px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-5 no-underline flex flex-col justify-between group transition-all duration-200 hover:scale-[1.01]"
+    style="--card-index: 3"
   >
     <div>
       <span
@@ -266,7 +283,8 @@
   </a>
 
   <div
-    class="col-span-1 md:col-span-2 h-[160px] flex flex-col overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition hover:scale-[1.015] cursor-pointer"
+    class="bento-card col-span-1 md:col-span-2 h-[160px] flex flex-col overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 transition hover:scale-[1.015] cursor-pointer"
+    style="--card-index: 4"
     on:click={() => openModal("world")}
     role="button"
     tabindex="0"
@@ -281,7 +299,8 @@
   </div>
 
   <div
-    class="h-[160px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 flex flex-col gap-3 w-full"
+    class="bento-card h-[160px] bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 flex flex-col gap-3 w-full"
+    style="--card-index: 5"
   >
     <div class="grid grid-cols-2 gap-2 h-full">
       <a
@@ -322,17 +341,23 @@
       </a>
     </div>
   </div>
+
 </div>
 
 {#if modal}
   <div
-    class="fixed inset-0 bg-black/40 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center z-50"
+    class="fixed inset-0 bg-transparent flex items-center justify-center z-50"
     on:click={closeModal}
     role="dialog"
+    transition:fade={{ duration: prefersReducedMotion ? 0 : 140 }}
   >
     <div
       class="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-[20px] p-4 sm:p-8 w-[94vw] sm:w-[88vw] max-w-[900px] max-h-[92vh] overflow-hidden relative"
       on:click|stopPropagation
+      transition:scale={{
+        duration: prefersReducedMotion ? 0 : 180,
+        start: 0.96,
+      }}
     >
       <button
         on:click={closeModal}
@@ -345,6 +370,24 @@
 {/if}
 
 <style>
+  .bento-card {
+    opacity: 0;
+    transform: translateY(20px) scale(0.985);
+    animation: bento-rise 560ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--card-index, 0) * 80ms + 120ms);
+  }
+
+  @keyframes bento-rise {
+    from {
+      opacity: 0;
+      transform: translateY(20px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
   @keyframes wave {
     0% {
       opacity: 0;
@@ -362,5 +405,13 @@
   }
   :global(.animate-wave) {
     animation: wave 1000ms ease-in-out forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bento-card {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
   }
 </style>

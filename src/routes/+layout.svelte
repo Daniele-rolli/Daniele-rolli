@@ -1,4 +1,7 @@
 <script>
+  import { onMount } from "svelte";
+  import { cubicOut } from "svelte/easing";
+  import { fade, fly } from "svelte/transition";
   import "@hackernoon/pixel-icon-library/fonts/iconfont.css";
   import { page } from "$app/stores";
   import Header from "../components/app/Header.svelte";
@@ -21,6 +24,19 @@
   let currentUrl = SITE_URL;
   let isBlogPost = false;
   let defaultImageUrl = toAbsoluteUrl(DEFAULT_SHARE_IMAGE);
+  let prefersReducedMotion = false;
+
+  onMount(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const syncMotionPreference = () => {
+      prefersReducedMotion = mediaQuery.matches;
+    };
+
+    syncMotionPreference();
+    mediaQuery.addEventListener("change", syncMotionPreference);
+
+    return () => mediaQuery.removeEventListener("change", syncMotionPreference);
+  });
 
   $: pathname = $page.url.pathname;
   $: currentUrl = toAbsoluteUrl(pathname);
@@ -58,9 +74,31 @@
 <main class="min-h-screen flex flex-col">
   <Header avatar="https://avatars.githubusercontent.com/u/67503004?v=4" />
 
-  <div class="flex-1">
-    <slot />
-  </div>
+  {#key pathname}
+    <div
+      class="flex-1 page-shell"
+      in:fly={{
+        y: prefersReducedMotion ? 0 : 14,
+        opacity: prefersReducedMotion ? 1 : 0,
+        duration: prefersReducedMotion ? 0 : 260,
+        easing: cubicOut,
+      }}
+      out:fade={{ duration: prefersReducedMotion ? 0 : 140 }}
+    >
+      <slot />
+    </div>
+  {/key}
 
   <Footer />
 </main>
+
+<style>
+  .page-shell {
+    will-change: transform, opacity;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .page-shell {
+      will-change: auto;
+    }
+  }
+</style>

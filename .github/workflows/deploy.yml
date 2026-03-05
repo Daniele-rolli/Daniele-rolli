@@ -17,6 +17,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      VITE_API_URL: ${{ secrets.NOW_PLAYING_URL }}
+      VITE_PUBLIC_FLAG: ${{ vars.NOW_PLAYING_AUTH_TOKEN }}
 
     steps:
       - uses: actions/checkout@v3

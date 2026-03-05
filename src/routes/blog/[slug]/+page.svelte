@@ -76,15 +76,21 @@
 <div class="my-20 mx-auto w-full max-w-5xl lg:px-8">
   <div class="relative px-4 sm:px-8 lg:px-12">
     <div class="mx-auto max-w-2xl lg:max-w-5xl">
-      <h1 class="text-7xl font-medium">{data.metadata.title}</h1>
+      <h1 class="page-enter-item text-7xl font-medium" style="--enter-index: 0">
+        {data.metadata.title}
+      </h1>
 
       <img
         src={data.metadata.banner || BLOG_IMAGE_FALLBACK}
         alt={data.metadata.title}
-        class="mt-8 rounded-lg object-cover"
+        class="page-enter-item mt-8 rounded-lg object-cover"
+        style="--enter-index: 1"
       />
 
-      <div class="mt-8 flex items-center gap-4 p-2 dark:border-zinc-700/40">
+      <div
+        class="page-enter-item mt-8 flex items-center gap-4 p-2 dark:border-zinc-700/40"
+        style="--enter-index: 2"
+      >
         <span class="text-sm font-semibold text-zinc-800 dark:text-zinc-200"
           >Share this article:</span
         >
@@ -146,7 +152,10 @@
         </button>
       </div>
 
-      <article class="mt-8 prose max-w-none dark:prose-invert">
+      <article
+        class="page-enter-item mt-8 prose max-w-none dark:prose-invert"
+        style="--enter-index: 3"
+      >
         {@html marked(data.content)}
       </article>
     </div>

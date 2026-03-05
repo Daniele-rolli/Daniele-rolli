@@ -143,7 +143,8 @@
 <canvas bind:this={canvas}></canvas>
 
 <div
-  class="absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center space-y-4"
+  class="page-enter-item absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center space-y-4"
+  style="--enter-index: 0"
 >
   <p class="mt-10 text-3xl font-bold">Wrong Turn?</p>
   <p>The page you are looking for does not exist.</p>

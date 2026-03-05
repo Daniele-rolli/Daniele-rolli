@@ -6,13 +6,13 @@
   <div class="my-20 mx-auto w-full max-w-7xl lg:px-8">
     <div class="relative px-4 sm:px-8 lg:px-12">
       <div class="mx-auto max-w-2xl lg:max-w-5xl">
-        <div
-          class="grid grid-cols-1 gap-y-10 lg:grid-cols-2 lg:grid-rows-[auto_1fr] sm:gap-y-12"
-        >
-          <div class="w-full lg:pl-20">
-            <div class="max-w-xs px-2.5 lg:max-w-none mx-auto">
-              <img
-                src="https://avatars.githubusercontent.com/u/67503004?v=4"
+          <div
+            class="grid grid-cols-1 gap-y-10 lg:grid-cols-2 lg:grid-rows-[auto_1fr] sm:gap-y-12"
+          >
+            <div class="w-full lg:pl-20 page-enter-item" style="--enter-index: 0">
+              <div class="max-w-xs px-2.5 lg:max-w-none mx-auto">
+                <img
+                  src="https://avatars.githubusercontent.com/u/67503004?v=4"
                 alt="Daniele Rolli"
                 width="800"
                 height="800"
@@ -24,7 +24,8 @@
           </div>
           <ul
             role="list"
-            class="flex sm:hidden w-full justify-evenly items-center"
+            class="flex sm:hidden w-full justify-evenly items-center page-enter-item"
+            style="--enter-index: 1"
           >
             <!--Bluesky-->
             <li class="flex">
@@ -72,7 +73,7 @@
               </a>
             </li>
           </ul>
-          <div class="lg:order-first lg:row-span-2">
+          <div class="lg:order-first lg:row-span-2 page-enter-item" style="--enter-index: 2">
             <h1
               class="text-4xl font-thin text-neutral-800 sm:text-5xl dark:text-neutral-100"
             >
@@ -117,7 +118,7 @@
               </article>
             </div>
           </div>
-          <div class="lg:pl-20">
+          <div class="lg:pl-20 page-enter-item" style="--enter-index: 3">
             <ul role="list" class="hidden sm:block">
               <!--Bluesky-->
               <li class="flex">
