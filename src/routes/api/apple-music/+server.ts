@@ -7,6 +7,14 @@ const EDGE_STALE_SECONDS = 60;
 const EDGE_CACHE_CONTROL = `public, s-maxage=${EDGE_CACHE_SECONDS}, stale-while-revalidate=${EDGE_STALE_SECONDS}`;
 export const prerender = false;
 
+const NOW_PLAYING_BASE_URL =
+    env.NOW_PLAYING_URL?.trim() ??
+    'http://localhost:3000';
+
+
+const NOW_PLAYING_AUTH_TOKEN =
+    env.NOW_PLAYING_AUTH_TOKEN?.trim();
+
 type CloudflareCacheStorage = CacheStorage & {
     default?: Cache;
 };
@@ -72,36 +80,13 @@ function nowPlayingUrl(base: string): string {
     return new URL('now-playing', normalized).toString();
 }
 
-function pickDebugHeaders(headers: Headers): Record<string, string> {
-    const keys = ['server', 'cf-ray', 'cf-cache-status', 'www-authenticate', 'x-served-by', 'content-type'];
-    const out: Record<string, string> = {};
-    for (const key of keys) {
-        const value = headers.get(key);
-        if (value) out[key] = value;
-    }
-    return out;
-}
-
-function pickBinding(bindings: Record<string, unknown>, key: string): string | null {
-    return asNonEmptyString(bindings[key]);
-}
-
 function edgeCache(): Cache | null {
     if (typeof caches === 'undefined') return null;
     return (caches as CloudflareCacheStorage).default ?? null;
 }
 
-export const GET: RequestHandler = async ({ request, platform }) => {
+export const GET: RequestHandler = async ({ request }) => {
     try {
-        const bindings = ((platform?.env ?? {}) as Record<string, unknown>);
-        const nowPlayingBaseUrl =
-            pickBinding(bindings, 'NOW_PLAYING_URL') ??
-            env.NOW_PLAYING_URL?.trim() ??
-            'http://localhost:3000';
-        const nowPlayingAuthToken =
-            pickBinding(bindings, 'NOW_PLAYING_AUTH_TOKEN') ??
-            env.NOW_PLAYING_AUTH_TOKEN?.trim();
-
         const cache = edgeCache();
         const cacheKey = new Request(request.url, { method: 'GET' });
         if (cache) {
@@ -110,27 +95,16 @@ export const GET: RequestHandler = async ({ request, platform }) => {
         }
 
         const headers: HeadersInit = { accept: 'application/json' };
-        if (nowPlayingAuthToken) {
-            headers.authorization = `Bearer ${nowPlayingAuthToken}`;
+        if (NOW_PLAYING_AUTH_TOKEN) {
+            headers.authorization = `Bearer ${NOW_PLAYING_AUTH_TOKEN}`;
         }
 
-        const upstreamUrl = nowPlayingUrl(nowPlayingBaseUrl);
-        const res = await globalThis.fetch(upstreamUrl, {
+        const res = await globalThis.fetch(nowPlayingUrl(NOW_PLAYING_BASE_URL), {
             headers,
             signal: AbortSignal.timeout(5000)
         });
 
-        if (!res.ok) {
-            const body = await res.text();
-            console.error('[apple-music] upstream-non-200', {
-                status: res.status,
-                statusText: res.statusText,
-                url: upstreamUrl,
-                headers: pickDebugHeaders(res.headers),
-                bodyPreview: body.slice(0, 500)
-            });
-            throw new Error(`Upstream ${res.status}`);
-        }
+        if (!res.ok) throw new Error(`Upstream ${res.status}`);
 
         const data = await res.json();
         const payload = asRecord(data) ?? {};
