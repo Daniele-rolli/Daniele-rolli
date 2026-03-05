@@ -23,6 +23,12 @@
     isPlaying: boolean;
   }
 
+  type UnknownRecord = Record<string, unknown>;
+
+  const publicNowPlayingEndpoint = buildNowPlayingUrl(
+    (import.meta.env.PUBLIC_NOW_PLAYING_URL ?? import.meta.env.VITE_NOW_PLAYING_URL ?? "") as string
+  );
+
   let data: AppleMusicData = {
     nowPlaying: null,
     lastTrack: null,
@@ -44,6 +50,108 @@
   $: shouldMarquee = `${displaySong} ${displayArtist}`.trim().length > 34;
   $: trackKey = track ? `${track.name}-${track.artist}` : "idle";
 
+  function asRecord(value: unknown): UnknownRecord | null {
+    return value && typeof value === "object" ? (value as UnknownRecord) : null;
+  }
+
+  function asNonEmptyString(value: unknown): string | null {
+    return typeof value === "string" && value.trim().length > 0 ? value : null;
+  }
+
+  function asBoolean(value: unknown): boolean | null {
+    if (typeof value === "boolean") return value;
+    if (typeof value === "string") {
+      const lower = value.toLowerCase();
+      if (lower === "true" || lower === "playing") return true;
+      if (lower === "false" || lower === "paused" || lower === "stopped") return false;
+    }
+    return null;
+  }
+
+  function extractArtist(track: UnknownRecord): string {
+    const directArtist = asNonEmptyString(track.artist) ?? asNonEmptyString(track.artistName);
+    if (directArtist) return directArtist;
+
+    const artists = Array.isArray(track.artists) ? track.artists : [];
+    const first = artists[0];
+    if (typeof first === "string") return first;
+    if (asRecord(first)) return asNonEmptyString(first.name) ?? "";
+
+    return "";
+  }
+
+  function normalizeTrack(raw: unknown): Track | null {
+    const track = asRecord(raw);
+    if (!track) return null;
+
+    const name = asNonEmptyString(track.name) ?? asNonEmptyString(track.title) ?? "";
+    const artist = extractArtist(track);
+    const album = asNonEmptyString(track.album) ?? asNonEmptyString(track.albumName) ?? "";
+    const albumArt =
+      asNonEmptyString(track.albumArt) ??
+      asNonEmptyString(track.albumArtUrl) ??
+      asNonEmptyString(track.artworkUrl100) ??
+      asNonEmptyString(track.artworkUrl) ??
+      "";
+
+    if (!name && !artist && !album && !albumArt) return null;
+
+    return { name, artist, album, albumArt };
+  }
+
+  function normalizeAppleMusicData(raw: unknown): AppleMusicData | null {
+    const payload = asRecord(raw);
+    if (!payload) return null;
+
+    const track =
+      normalizeTrack(payload.nowPlaying) ??
+      normalizeTrack(payload.now_playing) ??
+      normalizeTrack(payload.track) ??
+      normalizeTrack(payload.item);
+
+    const lastTrack = normalizeTrack(payload.lastTrack) ?? track;
+    const trackObj = asRecord(payload.track);
+    const isPlaying =
+      asBoolean(payload.isPlaying) ??
+      asBoolean(payload.is_playing) ??
+      asBoolean(payload.playing) ??
+      asBoolean(trackObj?.isPlaying) ??
+      asBoolean(trackObj?.is_playing) ??
+      false;
+
+    return {
+      nowPlaying: track,
+      lastTrack,
+      isPlaying,
+    };
+  }
+
+  function buildNowPlayingUrl(base: string): string | null {
+    const trimmed = base.trim();
+    if (!trimmed) return null;
+
+    try {
+      const normalized = trimmed.endsWith("/") ? trimmed : `${trimmed}/`;
+      return new URL("now-playing", normalized).toString();
+    } catch {
+      return null;
+    }
+  }
+
+  function getEndpoints(): string[] {
+    const endpoints: string[] = [];
+
+    if (publicNowPlayingEndpoint) endpoints.push(publicNowPlayingEndpoint);
+    if (
+      typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ) {
+      endpoints.push("/api/apple-music");
+    }
+
+    return endpoints;
+  }
+
   function triggerFun() {
     if (prefersReducedMotion) return;
     isBursting = false;
@@ -57,11 +165,30 @@
   }
 
   async function fetchData() {
-    try {
-      const res = await fetch("/api/apple-music");
-      if (res.ok) data = await res.json();
-    } catch {
-      // keep showing stale data
+    const publicAuthToken = (
+      import.meta.env.PUBLIC_NOW_PLAYING_AUTH_TOKEN ?? import.meta.env.VITE_NOW_PLAYING_AUTH_TOKEN ?? ""
+    )
+      .toString()
+      .trim();
+
+    for (const endpoint of getEndpoints()) {
+      try {
+        const headers: HeadersInit = { accept: "application/json" };
+        if (endpoint === publicNowPlayingEndpoint && publicAuthToken) {
+          headers.authorization = `Bearer ${publicAuthToken}`;
+        }
+
+        const res = await fetch(endpoint, { headers });
+        if (!res.ok) continue;
+
+        const payload = normalizeAppleMusicData(await res.json());
+        if (!payload) continue;
+
+        data = payload;
+        return;
+      } catch {
+        // keep showing stale data
+      }
     }
   }
 
