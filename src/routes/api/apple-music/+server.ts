@@ -7,14 +7,6 @@ const EDGE_STALE_SECONDS = 60;
 const EDGE_CACHE_CONTROL = `public, s-maxage=${EDGE_CACHE_SECONDS}, stale-while-revalidate=${EDGE_STALE_SECONDS}`;
 export const prerender = false;
 
-const NOW_PLAYING_BASE_URL =
-    env.NOW_PLAYING_URL?.trim() ??
-    'http://localhost:3000';
-
-
-const NOW_PLAYING_AUTH_TOKEN =
-    env.NOW_PLAYING_AUTH_TOKEN?.trim();
-
 type CloudflareCacheStorage = CacheStorage & {
     default?: Cache;
 };
@@ -27,6 +19,10 @@ function asRecord(value: unknown): UnknownRecord | null {
 
 function asNonEmptyString(value: unknown): string | null {
     return typeof value === 'string' && value.trim().length > 0 ? value : null;
+}
+
+function bindingValue(bindings: Record<string, unknown>, key: string): string | null {
+    return asNonEmptyString(bindings[key]);
 }
 
 function asBoolean(value: unknown): boolean | null {
@@ -85,8 +81,32 @@ function edgeCache(): Cache | null {
     return (caches as CloudflareCacheStorage).default ?? null;
 }
 
-export const GET: RequestHandler = async ({ request }) => {
+export const GET: RequestHandler = async ({ request, platform }) => {
     try {
+        const bindings = (platform?.env ?? {}) as Record<string, unknown>;
+        const requestHost = new URL(request.url).hostname;
+        const allowLocalFallback = requestHost === 'localhost' || requestHost === '127.0.0.1';
+
+        const nowPlayingBaseUrl =
+            bindingValue(bindings, 'NOW_PLAYING_URL') ??
+            env.NOW_PLAYING_URL?.trim() ??
+            (allowLocalFallback ? 'http://localhost:3000' : null);
+        const nowPlayingAuthToken =
+            bindingValue(bindings, 'NOW_PLAYING_AUTH_TOKEN') ??
+            env.NOW_PLAYING_AUTH_TOKEN?.trim();
+
+        if (!nowPlayingBaseUrl) {
+            console.error('[apple-music] missing NOW_PLAYING_URL', {
+                host: requestHost,
+                hasBindingUrl: Boolean(bindingValue(bindings, 'NOW_PLAYING_URL')),
+                hasPrivateEnvUrl: Boolean(env.NOW_PLAYING_URL?.trim())
+            });
+            return json(
+                { nowPlaying: null, lastTrack: null, isPlaying: false },
+                { headers: { 'Cache-Control': 'no-store' } }
+            );
+        }
+
         const cache = edgeCache();
         const cacheKey = new Request(request.url, { method: 'GET' });
         if (cache) {
@@ -95,11 +115,11 @@ export const GET: RequestHandler = async ({ request }) => {
         }
 
         const headers: HeadersInit = { accept: 'application/json' };
-        if (NOW_PLAYING_AUTH_TOKEN) {
-            headers.authorization = `Bearer ${NOW_PLAYING_AUTH_TOKEN}`;
+        if (nowPlayingAuthToken) {
+            headers.authorization = `Bearer ${nowPlayingAuthToken}`;
         }
 
-        const res = await globalThis.fetch(nowPlayingUrl(NOW_PLAYING_BASE_URL), {
+        const res = await globalThis.fetch(nowPlayingUrl(nowPlayingBaseUrl), {
             headers,
             signal: AbortSignal.timeout(5000)
         });
