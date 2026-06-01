@@ -79,14 +79,13 @@
         (import.meta.env.PUBLIC_NOW_PLAYING_URL ?? "") as string,
     );
 
-    export let initialData: AppleMusicData = {
+    let data: AppleMusicData = {
         nowPlaying: null,
         lastTrack: null,
         isPlaying: false,
         lyrics: [],
     };
 
-    let data: AppleMusicData = initialData;
     let interval: ReturnType<typeof setInterval>;
     let burstTimeout: ReturnType<typeof setTimeout> | undefined;
     let prefersReducedMotion = false;
@@ -130,15 +129,18 @@
 
     function triggerWordBurst(lyricText: string) {
         if (prefersReducedMotion || !lyricText) return;
+
         const allWords = lyricText.split(/\s+/).filter(Boolean);
 
         const chunks: string[] = [];
         const chunkSize = allWords.length > 8 ? 3 : 2;
+
         for (let i = 0; i < allWords.length; i += chunkSize) {
             chunks.push(allWords.slice(i, i + chunkSize).join(" "));
         }
 
         const totalChunks = chunks.length;
+
         chunks.forEach((chunkText, index) => {
             const id = particleIdCounter++;
 
@@ -168,6 +170,7 @@
             `;
 
             particles = [...particles, { id, text: chunkText, style }];
+
             setTimeout(() => {
                 particles = particles.filter((p) => p.id !== id);
             }, 2200);
@@ -195,7 +198,7 @@
 
     function asNonEmptyString(value: unknown): string | null {
         return typeof value === "string" && value.trim().length > 0
-            ? (value as string)
+            ? value
             : null;
     }
 
@@ -297,6 +300,7 @@
                 if (!res.ok) continue;
                 const payload = normalizeAppleMusicData(await res.json());
                 if (!payload) continue;
+
                 const now = Date.now();
                 if (payload.isPlaying) lastPlayingAt = now;
                 const hasTrack = Boolean(
@@ -304,6 +308,7 @@
                 );
                 const forcedPlaying =
                     hasTrack && now - lastPlayingAt <= PLAYING_GRACE_MS;
+
                 const oldTrackKey = track
                     ? `${track.name}-${track.artist}`
                     : "";
@@ -311,6 +316,7 @@
                     (payload.nowPlaying ?? payload.lastTrack)
                         ? `${(payload.nowPlaying ?? payload.lastTrack)?.name}-${(payload.nowPlaying ?? payload.lastTrack)?.artist}`
                         : "";
+
                 if (oldTrackKey !== newTrackKey) {
                     currentPlaybackSeconds = 0;
                     activeLyric = "";
@@ -340,14 +346,8 @@
         };
         syncMotionPreference();
         mediaQuery.addEventListener("change", syncMotionPreference);
-
-        if (data.isPlaying) {
-            playbackTimer = setInterval(() => {
-                currentPlaybackSeconds += 0.5;
-            }, 500);
-        }
-
-        interval = setInterval(fetchData, 15_000);
+        fetchData();
+        interval = setInterval(fetchData, 30_000);
         return () => {
             mediaQuery?.removeEventListener("change", syncMotionPreference);
         };
@@ -497,9 +497,6 @@
     .eq-bar.is-playing {
         animation: equalizer-wave var(--eq-play-duration, 1.8s) ease-in-out
             infinite;
-    }
-
-    .eq-bar.is-playing {
         animation-delay: var(--eq-delay, 0s);
     }
 

@@ -2,7 +2,6 @@
     import AppleMusic from "../components/home/AppleMusic.svelte";
     import AppleMusicCD from "../components/home/AppleMusicCD.svelte";
     import Bento from "../components/home/Bento.svelte";
-    export let data;
 </script>
 
 <main>
@@ -13,7 +12,7 @@
                     class="hero-item relative z-30 sm:hidden"
                     style="--hero-index: 0"
                 >
-                    <AppleMusic initialData={data.appleMusic} />
+                    <AppleMusic />
                 </div>
                 <h1
                     class="text-7xl hero-item relative z-0"
@@ -33,7 +32,7 @@
                 </p>
             </div>
             <div class="hidden sm:flex">
-                <AppleMusicCD initialData={data.appleMusic} />
+                <AppleMusicCD />
             </div>
         </div>
         <div class="hero-item" style="--hero-index: 3">
