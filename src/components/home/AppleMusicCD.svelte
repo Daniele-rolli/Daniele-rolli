@@ -49,7 +49,7 @@
 
     $: track = data.nowPlaying ?? data.lastTrack;
     $: isPlaying = data.isPlaying;
-    $: shouldShow = Boolean(track);
+    $: shouldShow = Boolean(track && isPlaying);
     $: lyrics = data.lyrics ?? [];
 
     $: displayArtist = truncateString(track?.artist ?? "Unknown Artist", 26);
