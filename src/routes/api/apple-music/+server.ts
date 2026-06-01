@@ -148,19 +148,29 @@ export const GET: RequestHandler = async ({ request, platform }) => {
       );
     }
 
-    const cache =
-      typeof caches !== "undefined"
-        ? ((caches as CloudflareCacheStorage).default ?? null)
-        : null;
+    let cache: Cache | null = null;
+    try {
+      if (typeof caches !== "undefined" && caches && "default" in caches) {
+        cache = (caches as any).default ?? null;
+      }
+    } catch {
+      // Fail-safe fallback
+    }
+
     const cacheKey = new Request(request.url, { method: "GET" });
     if (cache) {
-      const cached = await cache.match(cacheKey);
-      if (cached) return cached;
+      try {
+        const cached = await cache.match(cacheKey);
+        if (cached) return cached;
+      } catch {
+        // Fail-safe fallback
+      }
     }
 
     const headers: HeadersInit = { accept: "application/json" };
-    if (nowPlayingAuthToken)
+    if (nowPlayingAuthToken) {
       headers.authorization = `Bearer ${nowPlayingAuthToken}`;
+    }
 
     const res = await globalThis.fetch(
       new URL(
@@ -199,23 +209,36 @@ export const GET: RequestHandler = async ({ request, platform }) => {
       lyrics = await fetchLyrics(track.name, track.artist);
     }
 
-    const response = json(
-      {
-        nowPlaying: track,
-        lastTrack: track,
-        isPlaying,
-        lyrics,
-      },
-      {
-        headers: {
-          "Cache-Control": BROWSER_CACHE_CONTROL,
-          "CDN-Cache-Control": EDGE_CACHE_CONTROL,
-          "Cloudflare-CDN-Cache-Control": EDGE_CACHE_CONTROL,
-        },
-      },
-    );
+    const responseData = {
+      nowPlaying: track,
+      lastTrack: track,
+      isPlaying,
+      lyrics,
+    };
 
-    if (cache) await cache.put(cacheKey, response.clone());
+    const response = json(responseData, {
+      headers: {
+        "Cache-Control": BROWSER_CACHE_CONTROL,
+        "CDN-Cache-Control": EDGE_CACHE_CONTROL,
+        "Cloudflare-CDN-Cache-Control": EDGE_CACHE_CONTROL,
+      },
+    });
+
+    if (cache) {
+      try {
+        const cacheResponse = new Response(JSON.stringify(responseData), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": `public, max-age=${EDGE_CACHE_SECONDS}`,
+          },
+        });
+        await cache.put(cacheKey, cacheResponse);
+      } catch {
+        // Fail-safe fallback
+      }
+    }
+
     return response;
   } catch (err) {
     console.error("[apple-music]", err);
