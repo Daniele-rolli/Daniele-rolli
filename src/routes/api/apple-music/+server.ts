@@ -2,8 +2,8 @@ import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { env } from "$env/dynamic/private";
 
-const EDGE_CACHE_SECONDS = 300;
-const EDGE_STALE_SECONDS = 60;
+const EDGE_CACHE_SECONDS = 5;
+const EDGE_STALE_SECONDS = 15;
 const EDGE_CACHE_CONTROL = `public, s-maxage=${EDGE_CACHE_SECONDS}, stale-while-revalidate=${EDGE_STALE_SECONDS}`;
 const BROWSER_CACHE_CONTROL = "no-store";
 export const prerender = false;
@@ -12,7 +12,7 @@ type CloudflareCacheStorage = CacheStorage & { default?: Cache };
 type UnknownRecord = Record<string, unknown>;
 
 interface LyricLine {
-  time: number; // in seconds
+  time: number;
   text: string;
 }
 
@@ -79,7 +79,6 @@ function normalizeTrack(payload: UnknownRecord): UnknownRecord | null {
   return { name, artist, album, albumArt };
 }
 
-// Parses LRCLIB's syncedLyrics string: "[00:12.34] Content line"
 function parseLyrics(syncedLyrics: string): LyricLine[] {
   const lines = syncedLyrics.split("\n");
   const result: LyricLine[] = [];
@@ -93,7 +92,6 @@ function parseLyrics(syncedLyrics: string): LyricLine[] {
     const seconds = parseInt(match[2], 10);
     const ms = parseInt(match[3], 10);
 
-    // Convert to absolute seconds
     const time = minutes * 60 + seconds + ms / 100;
     const text = line.replace(timeRegex, "").trim();
 
@@ -117,7 +115,6 @@ async function fetchLyrics(
 
     const data = await res.json();
     if (Array.isArray(data) && data.length > 0) {
-      // Find the first result with synchronized lyrics
       const bestMatch = data.find((item) => item.syncedLyrics);
       if (bestMatch?.syncedLyrics) {
         return parseLyrics(bestMatch.syncedLyrics);
@@ -193,7 +190,6 @@ export const GET: RequestHandler = async ({ request, platform }) => {
       asBoolean(trackObj?.is_playing) ??
       false;
 
-    // Fetch lyrics if track details exist
     let lyrics: LyricLine[] = [];
     if (
       track &&

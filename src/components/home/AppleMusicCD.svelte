@@ -29,13 +29,14 @@
 
     const INTERNAL_NOW_PLAYING_ENDPOINT = "/api/apple-music";
 
-    let data: AppleMusicData = {
+    export let initialData: AppleMusicData = {
         nowPlaying: null,
         lastTrack: null,
         isPlaying: false,
         lyrics: [],
     };
 
+    let data: AppleMusicData = initialData;
     let interval: ReturnType<typeof setInterval>;
     let prefersReducedMotion = false;
     let mediaQuery: MediaQueryList | null = null;
@@ -51,7 +52,6 @@
     $: isPlaying = data.isPlaying;
     $: shouldShow = Boolean(track);
     $: lyrics = data.lyrics ?? [];
-
     $: displayArtist = truncateString(track?.artist ?? "Unknown Artist", 26);
     $: displayTitle = truncateString(track?.name ?? "Unknown Track", 32);
 
@@ -76,22 +76,18 @@
 
     function triggerWordBurst(lyricText: string) {
         if (prefersReducedMotion || !lyricText) return;
-
         const allWords = lyricText.split(/\s+/).filter(Boolean);
 
         const chunks: string[] = [];
         const chunkSize = allWords.length > 8 ? 3 : 2;
-
         for (let i = 0; i < allWords.length; i += chunkSize) {
             chunks.push(allWords.slice(i, i + chunkSize).join(" "));
         }
 
         const totalChunks = chunks.length;
-
         const totalArc =
             totalChunks > 4 ? Math.min(220, totalChunks * 45) : 140;
         const startAngle = -90 - totalArc / 2;
-
         chunks.forEach((chunkText, index) => {
             const id = particleIdCounter++;
 
@@ -123,7 +119,6 @@
             `;
 
             particles = [...particles, { id, text: chunkText, style }];
-
             setTimeout(() => {
                 particles = particles.filter((p) => p.id !== id);
             }, 2600);
@@ -143,7 +138,6 @@
             const newTrackKey = payload.nowPlaying
                 ? `${payload.nowPlaying.name}-${payload.nowPlaying.artist}`
                 : "";
-
             if (oldTrackKey !== newTrackKey) {
                 currentPlaybackSeconds = 0;
                 activeLyric = "";
@@ -151,7 +145,6 @@
             }
 
             data = payload;
-
             clearInterval(playbackTimer);
             if (data.isPlaying) {
                 playbackTimer = setInterval(() => {
@@ -172,7 +165,12 @@
         syncMotionPreference();
         mediaQuery.addEventListener("change", syncMotionPreference);
 
-        fetchData();
+        if (data.isPlaying) {
+            playbackTimer = setInterval(() => {
+                currentPlaybackSeconds += 0.5;
+            }, 500);
+        }
+
         interval = setInterval(fetchData, 15_000);
 
         return () => {
