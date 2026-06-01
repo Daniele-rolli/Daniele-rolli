@@ -792,11 +792,6 @@
     "@cloudflare/workers-types" "^4.20250507.0"
     worktop "0.8.0-next.18"
 
-"@sveltejs/adapter-static@^3.0.10":
-  version "3.0.10"
-  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-static/-/adapter-static-3.0.10.tgz#526ab78cd1d3a861dd0233e8ff34a204af40d595"
-  integrity sha512-7D9lYFWJmB7zxZyTE/qxjksvMqzMuYrrsyh1f4AlZqeZeACPRySjbC3aFiY55wb1tWUaKOQG9PVbm74JcN2Iew==
-
 "@sveltejs/kit@^2.16.0":
   version "2.20.7"
   resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-2.20.7.tgz#c6fd581403fe55a6a2deefd027e0547c98e780b4"
