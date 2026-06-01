@@ -154,7 +154,7 @@ export const GET: RequestHandler = async ({ request, platform }) => {
         cache = (caches as any).default ?? null;
       }
     } catch {
-      // Fail-safe fallback
+      // Fallback
     }
 
     const cacheKey = new Request(request.url, { method: "GET" });
@@ -163,7 +163,7 @@ export const GET: RequestHandler = async ({ request, platform }) => {
         const cached = await cache.match(cacheKey);
         if (cached) return cached;
       } catch {
-        // Fail-safe fallback
+        // Fallback
       }
     }
 
@@ -190,15 +190,23 @@ export const GET: RequestHandler = async ({ request, platform }) => {
     const data = await res.json();
     const payload = asRecord(data) ?? {};
     const track = normalizeTrack(payload);
-
     const trackObj = asRecord(payload.track);
-    const isPlaying =
-      asBoolean(payload.isPlaying) ??
-      asBoolean(payload.is_playing) ??
-      asBoolean(payload.playing) ??
-      asBoolean(trackObj?.isPlaying) ??
-      asBoolean(trackObj?.is_playing) ??
-      false;
+
+    // CRITICAL FIX: If source is explicitly recently-played, override to false
+    const sourceString =
+      asNonEmptyString(payload.source) ?? asNonEmptyString(trackObj?.source);
+    const isRecentlyPlayed = sourceString === "recently-played";
+
+    let isPlaying = false;
+    if (!isRecentlyPlayed) {
+      isPlaying =
+        asBoolean(payload.isPlaying) ??
+        asBoolean(payload.is_playing) ??
+        asBoolean(payload.playing) ??
+        asBoolean(trackObj?.isPlaying) ??
+        asBoolean(trackObj?.is_playing) ??
+        false;
+    }
 
     let lyrics: LyricLine[] = [];
     if (
@@ -210,7 +218,7 @@ export const GET: RequestHandler = async ({ request, platform }) => {
     }
 
     const responseData = {
-      nowPlaying: track,
+      nowPlaying: isPlaying ? track : null,
       lastTrack: track,
       isPlaying,
       lyrics,
@@ -235,7 +243,7 @@ export const GET: RequestHandler = async ({ request, platform }) => {
         });
         await cache.put(cacheKey, cacheResponse);
       } catch {
-        // Fail-safe fallback
+        // Fallback
       }
     }
 
