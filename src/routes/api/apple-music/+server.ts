@@ -11,11 +11,6 @@ export const prerender = false;
 type CloudflareCacheStorage = CacheStorage & { default?: Cache };
 type UnknownRecord = Record<string, unknown>;
 
-interface LyricLine {
-  time: number;
-  text: string;
-}
-
 function asRecord(value: unknown): UnknownRecord | null {
   return value && typeof value === "object" ? (value as UnknownRecord) : null;
 }
@@ -77,53 +72,6 @@ function normalizeTrack(payload: UnknownRecord): UnknownRecord | null {
 
   if (!name && !artist && !album && !albumArt) return null;
   return { name, artist, album, albumArt };
-}
-
-function parseLyrics(syncedLyrics: string): LyricLine[] {
-  const lines = syncedLyrics.split("\n");
-  const result: LyricLine[] = [];
-  const timeRegex = /\[(\d+):(\d+)\.(\d+)\]/;
-
-  for (const line of lines) {
-    const match = timeRegex.exec(line);
-    if (!match) continue;
-
-    const minutes = parseInt(match[1], 10);
-    const seconds = parseInt(match[2], 10);
-    const ms = parseInt(match[3], 10);
-
-    const time = minutes * 60 + seconds + ms / 100;
-    const text = line.replace(timeRegex, "").trim();
-
-    if (text) {
-      result.push({ time, text });
-    }
-  }
-  return result.sort((a, b) => a.time - b.time);
-}
-
-async function fetchLyrics(
-  title: string,
-  artist: string,
-): Promise<LyricLine[]> {
-  try {
-    const url = `https://lrclib.net/api/search?track_name=${encodeURIComponent(title)}&artist_name=${encodeURIComponent(artist)}`;
-    const res = await globalThis.fetch(url, {
-      headers: { accept: "application/json" },
-    });
-    if (!res.ok) return [];
-
-    const data = await res.json();
-    if (Array.isArray(data) && data.length > 0) {
-      const bestMatch = data.find((item) => item.syncedLyrics);
-      if (bestMatch?.syncedLyrics) {
-        return parseLyrics(bestMatch.syncedLyrics);
-      }
-    }
-    return [];
-  } catch {
-    return [];
-  }
 }
 
 export const GET: RequestHandler = async ({ request, platform }) => {
@@ -200,20 +148,11 @@ export const GET: RequestHandler = async ({ request, platform }) => {
       asBoolean(trackObj?.is_playing) ??
       false;
 
-    let lyrics: LyricLine[] = [];
-    if (
-      track &&
-      typeof track.name === "string" &&
-      typeof track.artist === "string"
-    ) {
-      lyrics = await fetchLyrics(track.name, track.artist);
-    }
-
     const responseData = {
       nowPlaying: track,
       lastTrack: track,
       isPlaying,
-      lyrics,
+      lyrics: [],
     };
 
     const response = json(responseData, {
