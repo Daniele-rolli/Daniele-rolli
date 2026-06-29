@@ -46,7 +46,6 @@
     let particles: WordParticle[] = [];
     let particleIdCounter = 0;
     let activeLyric = "";
-    let lastLyricsTrackKey = "";
 
     $: track = data.nowPlaying ?? data.lastTrack;
     $: isPlaying = data.isPlaying;
@@ -131,20 +130,6 @@
         });
     }
 
-    async function fetchLyrics(trackName: string, artistName: string) {
-        try {
-            const res = await fetch(
-                `/api/apple-music/lyrics?track=${encodeURIComponent(trackName)}&artist=${encodeURIComponent(artistName)}`,
-                { headers: { accept: "application/json" } },
-            );
-            if (!res.ok) return;
-            const payload = await res.json();
-            if (Array.isArray(payload.lyrics)) {
-                data = { ...data, lyrics: payload.lyrics };
-            }
-        } catch {}
-    }
-
     async function fetchData() {
         try {
             const res = await fetch(INTERNAL_NOW_PLAYING_ENDPOINT, {
@@ -166,11 +151,6 @@
             }
 
             data = payload;
-
-            if (newTrackKey && newTrackKey !== lastLyricsTrackKey) {
-                lastLyricsTrackKey = newTrackKey;
-                fetchLyrics(payload.nowPlaying.name, payload.nowPlaying.artist);
-            }
 
             clearInterval(playbackTimer);
             if (data.isPlaying) {

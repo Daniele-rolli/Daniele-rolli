@@ -1,7 +1,7 @@
 ---
 title: "New Website who this?"
 date: "2026-01-02"
-banner: "/images/message-light.png"
+banner: "/images/blog/message-light.png"
 ---
 
 Hi there 👋! Welcome to my little corner of the internet, this will be a short article about who I am, which you can probably read all over the website, and about the website itself from tech stack to design and what not.

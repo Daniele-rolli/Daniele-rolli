@@ -15,6 +15,7 @@
         <div class="mb-8 flex justify-end page-enter-item" style="--enter-index: 0">
           <a
             href="/rss.xml"
+            aria-label="RSS Feed"
             class="inline-flex items-center px-4 py-2 text-sm text-neutral-600 transition-colors hover:text-primary dark:border-neutral-700 dark:text-neutral-300"
           >
             <i class="hn hn-rss mr-2 text-2xl"></i>

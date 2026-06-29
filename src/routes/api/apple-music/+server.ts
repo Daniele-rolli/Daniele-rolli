@@ -148,11 +148,18 @@ export const GET: RequestHandler = async ({ request, platform }) => {
       asBoolean(trackObj?.is_playing) ??
       false;
 
+    const lyrics = Array.isArray(payload.lyrics)
+      ? payload.lyrics.map((l: Record<string, unknown>) => ({
+          time: Number(l.time ?? 0),
+          text: String(l.text ?? ""),
+        }))
+      : [];
+
     const responseData = {
       nowPlaying: track,
       lastTrack: track,
       isPlaying,
-      lyrics: [],
+      lyrics,
     };
 
     const response = json(responseData, {
