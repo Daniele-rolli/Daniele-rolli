@@ -1,6 +1,6 @@
 <script>
   import { page } from "$app/stores";
-  import { marked } from "marked";
+  import { marked } from "$lib/markdown";
   import { onMount } from "svelte";
   export let data;
 

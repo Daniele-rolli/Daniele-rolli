@@ -1,6 +1,6 @@
 <script lang="ts">
   import Stack from "../../../components/projects/Stack.svelte";
-  import { marked } from "marked";
+  import { marked } from "$lib/markdown";
   export let data;
   console.log(data);
 </script>
